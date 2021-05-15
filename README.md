@@ -1,7 +1,7 @@
 # Gridsystem
 Marker handling resource for FiveM
 
-This resource make it easy to handle marker in one single resource. Markers are registered within "chunks" and all the maths is done based on the chunk the player is in.
+This resource make it easy to handle markers in one single resource. Markers are registered within "chunks" and all the maths is done based on the chunk the player is in.
 It also has a permission system compatible with ESX job system, however you can easily edit the code to support other system/remove it.
 
 
@@ -61,5 +61,5 @@ Only 2 additional fields are added,
 Note
 =============
 Remember to start this script **BEFORE** other scripts that are triggering the `registerMakrer` event!.
-Remember to not restart this script with your server on otherwise all registered marker **WILL BE LOST** and you will have tolog in again.
+Remember to not restart this script with your server on otherwise all registered marker **WILL BE LOST** and you will have to log in again.
 I tried to prevent errors from happening but be aware this code is not 100% error prone. So if you encounter any bug please report the issue/ PR your fix thanks.
