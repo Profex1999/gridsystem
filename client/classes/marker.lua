@@ -6,7 +6,7 @@ function ParseMarker(m, invoker)
         LogMissingField('scale', m.name, invoker)
         m.scale = vector3(1.0, 1.0, 1.0)
     end
-
+    m.scaleZ = m.scale.z --save for later use
     if type(m.drawDistance) ~= "number" then m.drawDistance = 15.0 end
 
     if not m.control or (type(m.control) ~= "string" and type(m.control) ~= "number") then m.control = Keys['E']
@@ -27,6 +27,10 @@ function ParseMarker(m, invoker)
         m.drawDistance = 5.0
     else
         if not m.type then m.type = 20 end
+        if m.type == 1 or m.type == 23 or m.type > 24 and m.type < 28 or m.type == 44 then
+            m.pos = m.pos - vector3(0, 0, 0.97)
+            m.scaleZ = m.scaleZ + 1
+        end
         AddTextEntry(m.name, m.msg)
         
         if not m.color then LogMissingField("color", m.name, invoker); m.color = { r = 255, g = 0, b = 0 }

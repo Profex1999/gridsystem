@@ -9,7 +9,7 @@ local deltas = {
 	vector2(0, 1),
 }
 local bitShift = 2
-local zoneRadius = 50
+local zoneRadius = 64
 
 function GetGridChunk(x)
 	return math.floor((x + 8192) / zoneRadius)

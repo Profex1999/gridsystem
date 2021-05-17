@@ -4,8 +4,9 @@ MyPed = nil
 MyCoords = vector3(0,0,0)
 CurrentZone = nil
 
-CurrentChunk = nil
-CurrentChunks = {}
+local CurrentChunk = nil
+local CurrentChunks = {}
+local MarkersToCheck = {}
 RegisteredMarkers = {}
 MarkerWithJob = {}
 TempMarkerWithJob = {}
@@ -42,6 +43,14 @@ CreateThread(function()
         if chunk ~= CurrentChunk then
             CurrentChunks = GetNearbyChunks(MyCoords)
         end
+        MarkersToCheck = {}
+        for i = 1, #CurrentChunks do
+            if RegisteredMarkers[CurrentChunks[i]] then
+                for _, zone in pairs(RegisteredMarkers[CurrentChunks[i]]) do
+                    table.insert(MarkersToCheck, zone)
+                end
+            end
+        end
         Wait(1000)
     end
 end)
@@ -50,33 +59,32 @@ CreateThread(function ()
     while true do
         local isInMarker, _currentZone = false, nil
         LetSleep = true
-        for i = 1, #CurrentChunks do
-            if RegisteredMarkers[CurrentChunks[i]] then
-                for _, zone in pairs(RegisteredMarkers[CurrentChunks[i]]) do
-                    local distance = #(MyCoords - zone.pos)
-                    if distance < zone.drawDistance then
-                        LetSleep = false
-                        if zone.show3D then
-                            DrawText3D(zone.pos.x, zone.pos.y, zone.pos.z, zone.msg)
-                        else
-                            if zone.type ~= -1 then
-                                DrawMarker(zone.type, zone.pos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zone.scale.x, zone.scale.y, zone.scale.z, zone.color.r, zone.color.g, zone.color.b, 100, false, true, 2, false, nil, nil, false)
-                            end
-                        end
-                        if abs(MyCoords.x - zone.pos.x) < zone.scale.x/2 and abs(MyCoords.y - zone.pos.y) < zone.scale.y/2 and abs(MyCoords.z - zone.pos.z) < zone.scale.z + 1.0 then
-                            isInMarker, _currentZone = true, zone
-                        end
+        for i = 1, #MarkersToCheck do
+            local zone = MarkersToCheck[i]
+            local distance = #(MyCoords - zone.pos)
+            if distance < zone.drawDistance then
+                LetSleep = false
+                if zone.show3D then
+                    DrawText3D(zone.pos.x, zone.pos.y, zone.pos.z, zone.msg)
+                else
+                    if zone.type ~= -1 then
+                        DrawMarker(zone.type, zone.pos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zone.scale.x, zone.scale.y, zone.scale.z, zone.color.r, zone.color.g, zone.color.b, 100, false, true, 2, false, nil, nil, false)
                     end
+                end
+                
+                if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
+                    isInMarker, _currentZone = true, zone
+                    
                 end
             end
         end
 
 		if isInMarker and not HasAlreadyEnteredMarker then
+            CurrentZone = _currentZone
 			HasAlreadyEnteredMarker = true
 			TriggerEvent("gridsystem:hasEnteredMarker", _currentZone)
 		end
-        
-		if not isInMarker and HasAlreadyEnteredMarker then
+		if HasAlreadyEnteredMarker and ( not isInMarker or _currentZone ~= CurrentZone) then
 			HasAlreadyEnteredMarker = false
 			TriggerEvent("gridsystem:hasExitedMarker")
 		end
@@ -115,4 +123,3 @@ CreateThread(function ()
         end
     end
 end)
-
