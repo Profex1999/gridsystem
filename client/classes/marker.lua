@@ -18,7 +18,7 @@ function ParseMarker(m, invoker)
         LogBadFormat("forceExit", m.name, invoker)
     end
 
-    if type(m.msg ~= 'string') then
+    if type(m.msg) ~= 'string' then
         m.msg = "NO TEXT PROVIDED"
         LogBadFormat("msg", m.name, invoker)
     end
