@@ -55,6 +55,9 @@ end)
 
 AddEventHandler("gridsystem:hasExitedMarker", function ()
     if CurrentZone then
+        if CurrentZone.mustExit then
+            CurrentZone.mustExit = nil
+        end
         if CurrentZone.onExit then
             local status, err = pcall(CurrentZone.onExit)
             if not status then

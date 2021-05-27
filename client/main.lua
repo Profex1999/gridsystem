@@ -99,20 +99,21 @@ CreateThread(function ()
     while true do
         if CurrentZone then
             local _zone = CurrentZone
-            if _zone then
+            if _zone and not _zone.mustExit then
                 if not _zone.show3D then
                     DisplayHelpTextThisFrame(_zone.name, false)
                 end
 
-                if IsControlJustReleased(0, _zone.control) then
-                    if _zone.forceExit then
-                        CurrentZone = nil
-                    end
+                if IsControlJustReleased(0, _zone.control) then 
                     if _zone.action then
                         local status, err = pcall(_zone.action)
                         if not status then
                             LogError(string.format("Error executing action for marker %s. Error: %s", _zone.name, err))
                         end
+                    end
+
+                    if _zone.forceExit then
+                        CurrentZone.mustExit = true
                     end
                 end
             end
