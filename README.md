@@ -26,7 +26,7 @@ First you create a table with the following params
 
 Example:
 ```lua
-TriggerEvent('gridsystem:registerMakrer' {
+TriggerEvent('gridsystem:registerMakrer', {
   name = 'a_unique_name_for_this_marker',
   pos = vector3(0.0, 0.0, 0.0),
   scale = vector3(1.5, 1.5, 1.5),
