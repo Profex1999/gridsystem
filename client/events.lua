@@ -39,9 +39,10 @@ AddEventHandler("gridsystem:registerMarker", function (marker)
     end
 end)
 
+-- Interazione separata dal marker cosi da poter creare marker anche molto piccoli ed interagibili 
 
 AddEventHandler("gridsystem:hasEnteredMarker", function (zone)
-    if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
+    if #(MyCoords.xy - zone.pos.xy) < #(zone.interact.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.interactZ then
         if zone.onEnter then
             local status, err = pcall(zone.onEnter)
             if not status then

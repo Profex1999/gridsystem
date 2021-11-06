@@ -12,6 +12,7 @@ First you create a table with the following params
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|------------------------------|
 | `name`         | Unique name of the marker                                                                                                                                                          | string         | YES      |                              |
 | `pos`          | Position of the marker                                                                                                                                                             | vector3        | YES      |                              |
+| `interact`     | Interact distance of the marker                                                                                                                                                    | vector3        | YES      | ```vector3(1.5, 1.5, 1.5)``` |
 | `scale`        | Scale of the marker                                                                                                                                                                | vector3        | NO       | ```vector3(1.5, 1.5, 1.5)``` |
 | `msg`          | Message on the top left  when inside the marker                                                                                                                                    | string         | NO       | `NO TEXT PROVIDED`           |
 | `drawDistance` | Distance when the marker start rendering                                                                                                                                           | number         | NO       | 15.0                         |
@@ -29,11 +30,20 @@ Example:
 TriggerEvent('gridsystem:registerMarker', {
   name = 'a_unique_name_for_this_marker',
   pos = vector3(0.0, 0.0, 0.0),
-  scale = vector3(1.5, 1.5, 1.5),
+  interact = vector3(1.5, 1.5, 1.5),-- Important
+  scale = vector3(0.5, 0.5, 0.5),
+  orientation = vector3(0.0,0.0,0.0),-- solo se necessario
+	orientation2 =vector3(0.0,0.0,0.0), -- solo se necessario
+  drawDistance= 50,
   msg = 'Press ~INPUT_CONTEXT~ to do something',
   control = 'E',
   type = 20,
   color = { r = 130, g = 120, b = 110 },
+  alpha = 200,
+  salta = true,
+  segue=false,
+  p19 = 2,
+  rotation= true,
   action = function()
     print('This is executed when you press E in the marker')
   end,
