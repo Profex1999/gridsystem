@@ -64,15 +64,18 @@ CreateThread(function ()
             local distance = #(MyCoords - zone.pos)
             if distance < zone.drawDistance then
                 LetSleep = false
-                if zone.show3D then
-                    DrawText3D(zone.pos.x, zone.pos.y, zone.pos.z, zone.msg)
+                if zone.show3D then --Classico 3dtext
+                    DrawText3D(zone.pos.x, zone.pos.y, zone.pos.z+0.5, zone.msg) --  il +0.5 e modificabile a piacimento 
+                    
+                elseif zone.show3Dme then --3d text sul giocatore
+                    DrawText3D(MyCoords.x, MyCoords.y, MyCoords.z+0.5, zone.msg) --  il +0.5 e modificabile a piacimento  
                 else
-                    if zone.type ~= -1 then
-                        DrawMarker(zone.type, zone.pos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zone.scale.x, zone.scale.y, zone.scale.z, zone.color.r, zone.color.g, zone.color.b, 100, false, true, 2, false, nil, nil, false)
+                    if zone.type ~= -1 then -- Nuovo marcher modificabile con orientation2 oer i primi 3 valori di rotazione e orientation per i secondi 3  alpha (trasparenza del blip),salta permette al blip di saltare sul psoto ,segue lo suardo , p19 (flag per la rotazione o per il seguire Controlare Documentazione nativa sul DrawMarker) 
+                        DrawMarker(zone.type, zone.pos,zone.orientation2.x, zone.orientation2.y, zone.orientation2.z,  zone.orientation.x, zone.orientation.y, zone.orientation.z, zone.scale.x, zone.scale.y, zone.scale.z, zone.color.r, zone.color.g, zone.color.b, zone.alpha, zone.salta, zone.segue, zone.p19, zone.rotation, false, false, false)
                     end
                 end
                 
-                if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
+                if #(MyCoords.xy - zone.pos.xy) < #(zone.interact.xy/2) and abs(MyCoords.z - zone.pos.z) < zone.interactZ then
                     isInMarker, _currentZone = true, zone
                     
                 end

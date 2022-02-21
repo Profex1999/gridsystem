@@ -6,7 +6,21 @@ function ParseMarker(m, invoker)
         LogMissingField('scale', m.name, invoker)
         m.scale = vector3(1.0, 1.0, 1.0)
     end
-    m.scaleZ = m.scale.z --save for later use
+    if not m.p19 then
+     m.p19 = 2
+    end
+    if not m.alpha then
+     m.alpha = 100
+    end
+    if not m.orientation or type(m.orientation) ~= 'vector3' then
+        -- LogMissingField('orientation', m.name, invoker)
+         m.orientation = vector3(0.0, 0.0, 0.0)
+     end
+    if not m.orientation2 or type(m.orientation2) ~= 'vector3' then
+       -- LogMissingField('orientation2', m.name, invoker)
+        m.orientation2 = vector3(0.0, 0.0, 0.0)
+    end
+    m.interactZ = m.interact.z --save for later use
     if type(m.drawDistance) ~= "number" then m.drawDistance = 15.0 end
 
     if not m.control or (type(m.control) ~= "string" and type(m.control) ~= "number") then m.control = Keys['E']
@@ -24,12 +38,12 @@ function ParseMarker(m, invoker)
     end
 
     if m.show3D then
-        m.drawDistance = 5.0
+        m.drawDistance = m.drawDistance
     else
         if not m.type then m.type = 20 end
         if m.type == 1 or m.type == 23 or m.type > 24 and m.type < 28 or m.type == 44 then
             m.pos = m.pos - vector3(0, 0, 0.97)
-            m.scaleZ = m.scaleZ + 1
+            m.interactZ = m.interactZ + 1
         end
         AddTextEntry(m.name, m.msg)
         
