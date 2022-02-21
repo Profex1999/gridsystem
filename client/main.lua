@@ -113,7 +113,7 @@ CreateThread(function ()
                     end
 
                     if _zone.forceExit then
-                        CurrentZone.mustExit = true
+                        _zone.mustExit = true
                     end
                 end
             end
