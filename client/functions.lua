@@ -85,10 +85,10 @@ CheckMarkerJob = function (marker)
     table.insert(MarkerWithJob[marker.permission], marker)
 end
 
-HasJob = function (marker)
-    if not marker.permission then return true end
+HasJob = function (jobName, jobGrade)
+    if not jobName then return true end
     while CurrentJob == nil do Wait(100) end
-    return (CurrentJob.name == marker.permission and CurrentJob.grade >= marker.jobGrade)
+    return (CurrentJob.name == jobName and CurrentJob.grade >= jobGrade)
 end
 
 RemoveAllJobMarkers = function ()
@@ -97,6 +97,9 @@ RemoveAllJobMarkers = function ()
             local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(v[i].name)
             if isRegistered then
                 LogInfo("Removing Job Marker: " .. v[i].name)
+                if RegisteredMarkers[chunkId][index].blip then
+                    RemoveBlip(RegisteredMarkers[chunkId][index].blip)
+                end
                 RegisteredMarkers[chunkId][index] = nil
             end
         end
@@ -106,7 +109,7 @@ end
 AddJobMarkers = function ()
     if MarkerWithJob[CurrentJob.name] then
         for i = 1, #MarkerWithJob[CurrentJob.name] do
-            if HasJob(MarkerWithJob[CurrentJob.name][i]) then
+            if HasJob(MarkerWithJob[CurrentJob.name][i].permission, MarkerWithJob[CurrentJob.name][i].jobGrade) then
                 InsertMarkerIntoGrid(MarkerWithJob[CurrentJob.name][i])
             end
         end
@@ -134,4 +137,44 @@ GetMarkersFromResource = function (resource)
         end
     end
     return temp
+end
+
+GetBlipsFromResource = function(resource)
+    local temp = {}
+    for k,v in pairs(RegisteredBlips) do
+        if v.resource == resource then
+            temp[#temp + 1] = v
+        end
+    end
+    return temp
+end
+
+RefreshBlips = function()
+    for k,v in pairs(RegisteredBlips) do
+        if v.permission then
+            if HasJob(v.permission, v.jobGrade) then
+                if not RegisteredBlips[k].handle then
+                    RegisteredBlips[k] = ParseBlip(RegisteredBlips[k])
+                end
+            else
+                if RegisteredBlips[k].handle then
+                    RemoveBlip(RegisteredBlips[k].handle)
+                    RegisteredBlips[k].handle = nil
+                end
+            end
+        end
+    end
+end
+
+RegisterBlip = function(blip, invoker)
+    if RegisteredBlips[blip.name] then
+        if not HasJob(RegisteredBlips[blip.name].permission, RegisteredBlips[blip.name].jobGrade) then
+            RemoveBlip(RegisteredBlips[blip.name].handle)
+            RegisteredBlips[blip.name].handle = nil
+        end
+    else
+        if HasJob(blip.permission, blip.jobGrade) then
+            RegisteredBlips[blip.name] = ParseBlip(blip, invoker)
+        end
+    end
 end

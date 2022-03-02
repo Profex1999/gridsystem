@@ -10,9 +10,10 @@ Keys = {
     ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-AddEventHandler("gridsystem:registerMarker", function (marker)
+AddEventHandler("gridsystem:registerMarker", function (marker, blip)
 
     marker = ParseMarker(marker, GetInvokingResource())
+    
     if not marker then return end
     if marker.permission and CurrentJob == nil then
         table.insert(TempMarkerWithJob, marker)
@@ -20,9 +21,19 @@ AddEventHandler("gridsystem:registerMarker", function (marker)
     end
 
     CheckMarkerJob(marker)
+    if blip then
+        blip.pos = marker.pos
+        blip.name = marker.name
+        if marker.permission then
+            blip.permission = marker.permission
+            blip.jobGrade = marker.jobGrade
+        end
+        RegisterBlip(blip, GetInvokingResource())
+    end
+
     local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(marker.name)
     if isRegistered then
-        if HasJob(marker) then
+        if HasJob(marker.permission, marker.jobGrade) then
             LogInfo("Updating Marker: " .. marker.name .. " Please WAIT!")
             RegisteredMarkers[chunkId][index] = marker
             CurrentZone = nil
@@ -32,15 +43,50 @@ AddEventHandler("gridsystem:registerMarker", function (marker)
             RegisteredMarkers[chunkId][index] = nil
         end
     else
-        if HasJob(marker) then
+        if HasJob(marker.permission, marker.jobGrade)  then
             local chunk = InsertMarkerIntoGrid(marker)
             LogSuccess("Registering Marker: " .. marker.name .. " in chunk: " .. chunk)
         end
     end
 end)
 
+AddEventHandler('gridsystem:registerBlip', function (blip)
+    RegisterBlip(blip, GetInvokingResource())
+end)
+
+AddEventHandler('gridsystem:removeBlip', function (name)
+    if RegisterBlip[name] then
+        RemoveBlip(RegisterBlip[name].handle)
+        RegisterBlip[name] = nil
+    else
+        LogError(GetInvokingResource(), "Blip not found: " .. name)
+    end
+end)
 
 AddEventHandler("gridsystem:hasEnteredMarker", function (zone)
+    CreateThread(function()
+        while CurrentZone do
+            if zone and not zone.mustExit then
+                if not zone.show3D and not Config.UseCustomNotifications then
+                    DisplayHelpTextThisFrame(zone.name, false)
+                end
+
+                if IsControlJustReleased(0, zone.control) then 
+                    if zone.action then
+                        local status, err = pcall(zone.action)
+                        if not status then
+                            LogError(string.format("Error executing action for marker %s. Error: %s", zone.name, err))
+                        end
+                    end
+
+                    if zone.forceExit then
+                        zone.mustExit = true
+                    end
+                end
+            end
+            Wait(0)
+        end
+    end)
     if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
         if zone.onEnter then
             local status, err = pcall(zone.onEnter)
@@ -82,6 +128,7 @@ end)
 RegisterNetEvent("esx:setJob")
 AddEventHandler("esx:setJob", function (job)
     CurrentJob = job
+    RefreshBlips()
     RemoveAllJobMarkers()
     AddJobMarkers()
 end)
@@ -89,6 +136,7 @@ end)
 
 AddEventHandler("onResourceStop", function (resource)
     local markers = GetMarkersFromResource(resource)
+    local blips = GetBlipsFromResource(resource)
     if #markers > 0 then
         for _, m in pairs(markers) do
             local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(m.name)
@@ -96,6 +144,12 @@ AddEventHandler("onResourceStop", function (resource)
                 LogInfo(string.format("Removing Marker For Stopping of Resource %s: %s", resource, m.name))
                 RegisteredMarkers[chunkId][index] = nil
             end
+        end
+    end
+    if #blips > 0 then
+        for i = 1, #blips do
+            RemoveBlip(blips[i].handle)
+            RegisteredBlips[blips[i].name] = nil
         end
     end
 end)

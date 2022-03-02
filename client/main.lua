@@ -8,6 +8,7 @@ local CurrentChunk = nil
 local CurrentChunks = {}
 local MarkersToCheck = {}
 RegisteredMarkers = {}
+RegisteredBlips = {}
 MarkerWithJob = {}
 TempMarkerWithJob = {}
 CurrentJob = nil
@@ -68,7 +69,7 @@ CreateThread(function ()
                     DrawText3D(zone.pos.x, zone.pos.y, zone.pos.z, zone.msg)
                 else
                     if zone.type ~= -1 then
-                        DrawMarker(zone.type, zone.pos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, zone.scale.x, zone.scale.y, zone.scale.z, zone.color.r, zone.color.g, zone.color.b, 100, false, true, 2, false, nil, nil, false)
+                        DrawMarker(zone.type, zone.pos, zone.dir, zone.rot, zone.scale, zone.color.r, zone.color.g, zone.color.b, zone.color.a, zone.bump, zone.faceCamera, 2, zone.rotate, zone.textureDict, zone.textureName, false)
                     end
                 end
                 
@@ -82,45 +83,21 @@ CreateThread(function ()
 		if isInMarker and not HasAlreadyEnteredMarker then
             CurrentZone = _currentZone
 			HasAlreadyEnteredMarker = true
+            if Config.UseCustomNotifications then
+                Config.CustomNotificationFunctionEnter(_currentZone.msg)
+            end
 			TriggerEvent("gridsystem:hasEnteredMarker", _currentZone)
 		end
 		if HasAlreadyEnteredMarker and ( not isInMarker or _currentZone ~= CurrentZone) then
 			HasAlreadyEnteredMarker = false
+            if Config.UseCustomNotifications then
+                Config.CustomNotificationFunctionExit()
+            end
 			TriggerEvent("gridsystem:hasExitedMarker")
 		end
         Wait(3)
 		if LetSleep then
 			Citizen.Wait(700)
 		end
-    end
-end)
-
-CreateThread(function ()
-    while true do
-        if CurrentZone then
-            local _zone = CurrentZone
-            if _zone and not _zone.mustExit then
-                if not _zone.show3D then
-                    DisplayHelpTextThisFrame(_zone.name, false)
-                end
-
-                if IsControlJustReleased(0, _zone.control) then 
-                    if _zone.action then
-                        local status, err = pcall(_zone.action)
-                        if not status then
-                            LogError(string.format("Error executing action for marker %s. Error: %s", _zone.name, err))
-                        end
-                    end
-
-                    if _zone.forceExit then
-                        _zone.mustExit = true
-                    end
-                end
-            end
-        end
-        Wait(0)
-        if LetSleep then
-            Wait(700)
-        end
     end
 end)

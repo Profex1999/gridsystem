@@ -1,17 +1,21 @@
 function ParseMarker(m, invoker)
     if not m.name then LogError("Marker creation failed: name not provided", invoker); return nil; end
     if not m.pos then LogError("Marker creation failed: position not provided", invoker); return nil; end
-    if type(m.pos) ~= "vector3" then LogError("Marker creation failed: position is not vector3", invoker); end
+    if type(m.pos) ~= "vector3" then LogError("Marker creation failed: position is not vector3", invoker); return nil end
+    if type(m.dir) ~= "vector3" then m.dir = Config.DefaultMarkerProperties.dir; end
+    if type(m.rot) ~= "vector3" then m.rot = Config.DefaultMarkerProperties.rot; end
+    if type(m.faceCamera) ~= "boolean" then m.faceCamera = Config.DefaultMarkerProperties.faceCamera; end
+    if type(m.bump) ~= "boolean" then m.bump = Config.DefaultMarkerProperties.bump; end
+    if type(m.rotate) ~= "boolean" then m.rotate = Config.DefaultMarkerProperties.rotate; end 
     if not m.scale or type(m.scale) ~= 'vector3' then
-        LogMissingField('scale', m.name, invoker)
-        m.scale = vector3(1.0, 1.0, 1.0)
+        m.scale = Config.DefaultMarkerProperties.scale
     end
     m.scaleZ = m.scale.z --save for later use
-    if type(m.drawDistance) ~= "number" then m.drawDistance = 15.0 end
+    if type(m.drawDistance) ~= "number" then m.drawDistance = Config.DefaultMarkerProperties.drawDistance; end
 
-    if not m.control or (type(m.control) ~= "string" and type(m.control) ~= "number") then m.control = Keys['E']
+    if not m.control or (type(m.control) ~= "string" and type(m.control) ~= "number") then m.control = Keys[Config.DefaultMarkerProperties.control];
     elseif type(m.control) == "string" then
-        m.control = Keys[m.control] or Keys['E']
+        m.control = Keys[m.control] or Keys[Config.DefaultMarkerProperties.control]
     end
 
     if type(m.forceExit) ~= "boolean" and type(m.forceExit) ~="nil" then
@@ -33,15 +37,15 @@ function ParseMarker(m, invoker)
         end
         AddTextEntry(m.name, m.msg)
         
-        if not m.color then LogMissingField("color", m.name, invoker); m.color = { r = 255, g = 0, b = 0 }
-        elseif type(m.color) ~= "table" or not (m.color.r and m.color.g and m.color.b) then
+        if not m.color then m.color = Config.DefaultMarkerProperties.color; end
+        if type(m.color) ~= "table" or not (m.color.r and m.color.g and m.color.b) then
             LogBadFormat("color", m.name)
-            m.color = { r = 255, g = 0, b = 0 }
+            m.color = Config.DefaultMarkerProperties.color
         end
+        if not m.color.a then m.color.a = Config.DefaultMarkerProperties.color.a end
     end
-
     if not m.action then LogMissingField("action", m.name, invoker); m.action = function () end; end
     m.resource = invoker
-
+    if m.job then m.permission = m.job end
     return m
 end
