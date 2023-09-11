@@ -1,9 +1,11 @@
 Config = {}
+
+Config.Framework = "none"  -- ESX/qb-core/none
 Config.DefaultMarkerProperties = {
     color = { r = 255, g = 0, b = 0, a = 50 },
     scale = vector3(0.5, 0.5, 0.3),
     drawDistance = 15.0,
-    control = 'E',
+    control = 38, -- E (https://docs.fivem.net/docs/game-references/controls/)
     dir = vector3(0.0, 0.0, 0.0),
     rot = vector3(0.0, 0.0, 0.0),
     faceCamera = true,
@@ -26,10 +28,10 @@ Config.CustomNotificationFunctionEnter = function (message)
     --message is the msg param you passed to the marker
     --Example: TriggerEvent('my_custom_event', message)
     --Example: exports['my_custom_export']:my_custom_export_function(message)
-    --https://github.com/dsheedes/cd_drawtextui Example:
-    --TriggerEvent('cd_drawtextui:ShowUI', 'show', message)
-    --Be aware that this function is only called when you enter the marker, not every tick.
-    --Code inside this will work only if Config.UseCustomNotifications is set to true
+    -- for ESX Useage:
+        -- exports["esx_textui"]:TextUI(message, "info")
+    -- for Qb-core Useage:
+        -- exports['qb-core']:DrawText(message,'right')
 end
 
 Config.CustomUseNotificationFunctionExit = function()
@@ -37,4 +39,8 @@ Config.CustomUseNotificationFunctionExit = function()
     --https://github.com/dsheedes/cd_drawtextui Example: TriggerEvent('cd_drawtextui:HideUI')
     --Be aware that this function is only called when you exit the marker, not every tick.
     --Code inside this will work only if Config.UseCustomNotifications is set to true
+    -- for ESX Useage:
+        -- exports["esx_textui"]:HideUI()
+    -- for Qb-core Useage:
+        -- exports['qb-core']:HideText()
 end

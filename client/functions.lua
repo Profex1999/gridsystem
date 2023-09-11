@@ -1,7 +1,7 @@
 local logInfo = false
 RegisterCommand("grid_log", function()
     logInfo = not logInfo
-end)
+end, true)
 LogError = function (invoker, text)
     if invoker then
         print("^1[FATAL ERROR] [" .. invoker .. "] " .. text)
@@ -86,6 +86,7 @@ CheckMarkerJob = function (marker)
 end
 
 HasJob = function (jobName, jobGrade)
+    if Config.Framework == "none" then return true end
     if not jobName then return true end
     while CurrentJob == nil do Wait(100) end
     return (CurrentJob.name == jobName and CurrentJob.grade >= jobGrade)
@@ -131,7 +132,7 @@ GetMarkersFromResource = function (resource)
         if type(v) == "table" then
             for i,j in pairs(v) do
                 if j.resource == resource then
-                    table.insert(temp, j)
+                    temp[#temp + 1] = j
                 end
             end
         end

@@ -13,9 +13,7 @@ function ParseMarker(m, invoker)
     m.scaleZ = m.scale.z --save for later use
     if type(m.drawDistance) ~= "number" then m.drawDistance = Config.DefaultMarkerProperties.drawDistance; end
 
-    if not m.control or (type(m.control) ~= "string" and type(m.control) ~= "number") then m.control = Keys[Config.DefaultMarkerProperties.control];
-    elseif type(m.control) == "string" then
-        m.control = Keys[m.control] or Keys[Config.DefaultMarkerProperties.control]
+    if not m.control or type(m.control) ~= "number" then m.control = Config.DefaultMarkerProperties.control;
     end
 
     if type(m.forceExit) ~= "boolean" and type(m.forceExit) ~="nil" then
