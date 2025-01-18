@@ -181,6 +181,10 @@ RefreshBlips = function()
 end
 
 RegisterBlip = function(blip, invoker)
+    if not blip.name then
+        LogError(invoker, "Blip creation failed: name not provided")
+        return
+    end
     if RegisteredBlips[blip.name] then
         if not HasJob(RegisteredBlips[blip.name].permission, RegisteredBlips[blip.name].jobGrade) then
             RemoveBlip(RegisteredBlips[blip.name].handle)
