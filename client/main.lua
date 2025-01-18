@@ -16,7 +16,7 @@ CurrentJob = nil
 LetSleep = true
 local abs = math.abs
 
-CreateThread(function ()
+CreateThread(function()
     if Config.Framework == "ESX" then 
         FrameworkObject = exports["es_extended"]:getSharedObject()
         CurrentJob = ESX.GetPlayerData().job
@@ -44,7 +44,7 @@ RegisterNetEvent('esx:setJob', function(job)
     AddJobMarkers()
 end)
 
-CreateThread(function ()
+CreateThread(function()
     while true do
         MyPed = PlayerPedId()
         MyCoords = GetEntityCoords(MyPed)
@@ -70,7 +70,7 @@ CreateThread(function()
     end
 end)
 
-
+AddEventHandler("gridsystem:hasEnteredMarker", function(zone)
     LogInfo(GetInvokingResource(), "Entered Marker: " .. zone.name)
     CreateThread(function()
         while CurrentZone do
@@ -107,7 +107,7 @@ end)
     end
 end)
 
-AddEventHandler("gridsystem:hasExitedMarker", function ()
+AddEventHandler("gridsystem:hasExitedMarker", function()
     if CurrentZone then
         LogInfo(GetInvokingResource(), "Exited Marker " .. CurrentZone.name)
         if CurrentZone.mustExit then
@@ -172,7 +172,7 @@ CreateThread(function()
     end
 end)
 
-AddEventHandler("onResourceStop", function (resource)
+AddEventHandler("onResourceStop", function(resource)
     local markers = GetMarkersFromResource(resource)
     local blips = GetBlipsFromResource(resource)
     if #markers > 0 then
