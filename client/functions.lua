@@ -1,27 +1,40 @@
-local logInfo = false
 RegisterCommand("grid_log", function()
-    logInfo = not logInfo
+    Config.Debug = not Config.Debug
+    print("Grid System Log is now " .. (Config.Debug and "^1disabled" or "^2enabled"))
 end, true)
-LogError = function (invoker, text)
-    if invoker then
-        print("^1[FATAL ERROR] [" .. invoker .. "] " .. text)
-    else
-        print("^1[FATAL ERROR] " .. text)
-    end
+
+LogErrorSkipConfig = function (invoker, ...)
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^1[FATAL ERROR] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogWarning = function (invoker, text)
-    print(string.format("^3[WARNING] [%s] %s", invoker, text))
+LogWarningSkipConfig = function (invoker, ...)
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^3[WARNING] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogSuccess = function (text)
-    if not logInfo then return end
-    print("^2 " .. text)
+LogError = function (invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^1[FATAL ERROR] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogInfo = function (text)
-    if not logInfo then return end
-    print("^5 " .. text)
+LogWarning = function (invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^3[WARNING] [%s] %s", invoker, table.concat({...}, " ")))
+end
+
+LogSuccess = function (invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^2[SUCCESS] [%s] %s", invoker, table.concat({...}, " ")))
+end
+
+LogInfo = function (invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^5[INFO] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
 LogMissingField = function (invoker, field, name)
@@ -97,7 +110,7 @@ RemoveAllJobMarkers = function ()
         for i = 1, #v do
             local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(v[i].name)
             if isRegistered then
-                LogInfo("Removing Job Marker: " .. v[i].name)
+                LogInfo(GetInvokingResource(), "Removing Job Marker: " .. v[i].name)
                 if RegisteredMarkers[chunkId][index].blip then
                     RemoveBlip(RegisteredMarkers[chunkId][index].blip)
                 end

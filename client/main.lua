@@ -71,7 +71,7 @@ CreateThread(function()
 end)
 
 
-AddEventHandler("gridsystem:hasEnteredMarker", function (zone)
+    LogInfo(GetInvokingResource(), "Entered Marker: " .. zone.name)
     CreateThread(function()
         while CurrentZone do
             if zone and not zone.mustExit then
@@ -83,7 +83,7 @@ AddEventHandler("gridsystem:hasEnteredMarker", function (zone)
                     if zone.action then
                         local status, err = pcall(zone.action)
                         if not status then
-                            LogError(string.format("Error executing action for marker %s. Error: %s", zone.name, err))
+                            LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
                         end
                     end
 
@@ -99,29 +99,30 @@ AddEventHandler("gridsystem:hasEnteredMarker", function (zone)
         if zone.onEnter then
             local status, err = pcall(zone.onEnter)
             if not status then
-                LogError(string.format("Error executing action for marker %s. Error: %s", zone.name, err))
+                LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
             end
         end
     else
-        LogError("Error: enter event triggered but player is outside of marker", GetInvokingResource())
+        LogError(GetInvokingResource(), "Enter event triggered but player is outside of marker")
     end
 end)
 
 AddEventHandler("gridsystem:hasExitedMarker", function ()
     if CurrentZone then
+        LogInfo(GetInvokingResource(), "Exited Marker " .. CurrentZone.name)
         if CurrentZone.mustExit then
             CurrentZone.mustExit = nil
         end
         if CurrentZone.onExit then
             local status, err = pcall(CurrentZone.onExit)
             if not status then
-                LogError(string.format("Error executing action for marker %s. Error: %s", CurrentZone.name, err))
+                LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", CurrentZone.name, err))
             end
         end
         CurrentZone = nil
         ClearHelp(true)
     else
-        LogError("Error: exit event triggered but marker never entered", GetInvokingResource())
+        LogError(GetInvokingResource(), "Error: exit event triggered but marker never entered")
     end
 end)
 
@@ -171,7 +172,7 @@ AddEventHandler("onResourceStop", function (resource)
         for _, m in pairs(markers) do
             local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(m.name)
             if isRegistered then
-                LogInfo(string.format("Removing Marker For Stopping of Resource %s: %s", resource, m.name))
+                LogInfo(GetInvokingResource(), string.format("Removing Marker For Stopping of Resource %s: %s", resource, m.name))
                 RegisteredMarkers[chunkId][index] = nil
             end
         end

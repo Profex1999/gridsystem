@@ -1,13 +1,13 @@
 function ParseMarker(m, invoker)
-    if not m.name then LogError("Marker creation failed: name not provided", invoker); return nil; end
-    if not m.pos then LogError("Marker creation failed: position not provided", invoker); return nil; end
-    if type(m.pos) ~= "vector3" then LogError("Marker creation failed: position is not vector3", invoker); return nil end
+    if not m.name then LogError(invoker, "Marker creation failed: name not provided"); return nil; end
+    if type(m.pos) ~= "vector3" then LogError(invoker, "Marker creation failed: position is not vector3"); return nil end
     if type(m.dir) ~= "vector3" then m.dir = Config.DefaultMarkerProperties.dir; end
     if type(m.rot) ~= "vector3" then m.rot = Config.DefaultMarkerProperties.rot; end
     if type(m.faceCamera) ~= "boolean" then m.faceCamera = Config.DefaultMarkerProperties.faceCamera; end
     if type(m.bump) ~= "boolean" then m.bump = Config.DefaultMarkerProperties.bump; end
     if type(m.rotate) ~= "boolean" then m.rotate = Config.DefaultMarkerProperties.rotate; end 
     if not m.scale or type(m.scale) ~= 'vector3' then
+        LogWarning(invoker, "Scale not provided or invalid, using default scale")
         m.scale = Config.DefaultMarkerProperties.scale
     end
     m.scaleZ = m.scale.z --save for later use
@@ -17,12 +17,12 @@ function ParseMarker(m, invoker)
     end
 
     if type(m.forceExit) ~= "boolean" and type(m.forceExit) ~="nil" then
-        LogBadFormat("forceExit", m.name, invoker)
+        LogBadFormat(invoker,"forceExit", m.name)
     end
 
     if type(m.msg) ~= 'string' then
         m.msg = "NO TEXT PROVIDED"
-        LogBadFormat("msg", m.name, invoker)
+        LogBadFormat(invoker, "msg", m.name)
     end
 
     if m.show3D then

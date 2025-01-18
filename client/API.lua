@@ -27,18 +27,18 @@ function GridSystem.registerMarker(marker, blip)
     local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(marker.name)
     if isRegistered then
         if HasJob(marker.permission, marker.jobGrade) then
-            LogInfo("Updating Marker: " .. marker.name .. " Please WAIT!")
+            LogInfo(GetInvokingResource(), "Updating Marker: " .. marker.name .. " Please WAIT!")
             RegisteredMarkers[chunkId][index] = marker
             CurrentZone = nil
             HasAlreadyEnteredMarker = false
         else
-            LogInfo("Removing Marker Because job changed: " .. marker.name)
+            LogInfo(GetInvokingResource(), "Removing Marker Because job changed: " .. marker.name)
             RegisteredMarkers[chunkId][index] = nil
         end
     else
         if HasJob(marker.permission, marker.jobGrade)  then
             local chunk = InsertMarkerIntoGrid(marker)
-            LogSuccess("Registering Marker: " .. marker.name .. " in chunk: " .. chunk)
+            LogSuccess(GetInvokingResource(), "Registering Marker: " .. marker.name .. " in chunk: " .. chunk)
         end
     end
 end
@@ -59,7 +59,7 @@ end
 function GridSystem.unregisterMarker(markerName)
     local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(markerName)
     if isRegistered then
-        LogInfo("Removing Marker: " .. markerName)
+        LogInfo(GetInvokingResource(), "Removing Marker: " .. markerName)
         RegisteredMarkers[chunkId][index] = nil
     end
 end
