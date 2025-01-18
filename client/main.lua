@@ -61,8 +61,8 @@ CreateThread(function()
         MarkersToCheck = {}
         for i = 1, #CurrentChunks do
             if RegisteredMarkers[CurrentChunks[i]] then
-                for zone = 1,#(RegisteredMarkers[CurrentChunks[i]]) do
-                    MarkersToCheck[#MarkersToCheck + 1] = zone
+                for zone = 1, #(RegisteredMarkers[CurrentChunks[i]]) do
+                    MarkersToCheck[#MarkersToCheck + 1] = RegisteredMarkers[CurrentChunks[i]][zone]
                 end
             end
         end
@@ -126,10 +126,10 @@ AddEventHandler("gridsystem:hasExitedMarker", function ()
     end
 end)
 
-CreateThread(function ()
-    while true do
+CreateThread(function()
+    local Sleep = 900
+    local function _markerThread()
         local isInMarker, _currentZone = false, nil
-        local Sleep = 900
         for i = 1, #MarkersToCheck do
             local zone = MarkersToCheck[i]
             local distance = #(MyCoords - zone.pos)
@@ -161,7 +161,14 @@ CreateThread(function ()
             end
 			TriggerEvent("gridsystem:hasExitedMarker")
 		end
-    Wait(Sleep)
+    end
+
+    while true do
+        local r, _e = pcall(_markerThread)
+        if not r then
+            LogErrorSkipConfig(GetInvokingResource(), "Error in marker compute:", _e)
+        end
+        Wait(Sleep)
     end
 end)
 
