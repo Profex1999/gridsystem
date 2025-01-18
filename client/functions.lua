@@ -1,38 +1,51 @@
-local logInfo = false
 RegisterCommand("grid_log", function()
-    logInfo = not logInfo
-end)
-LogError = function (invoker, text)
-    if invoker then
-        print("^1[FATAL ERROR] [" .. invoker .. "] " .. text)
-    else
-        print("^1[FATAL ERROR] " .. text)
-    end
+    Config.Debug = not Config.Debug
+    print("Grid System Log is now " .. (Config.Debug and "^1disabled" or "^2enabled"))
+end, true)
+
+LogErrorSkipConfig = function(invoker, ...)
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^1[FATAL ERROR] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogWarning = function (invoker, text)
-    print(string.format("^3[WARNING] [%s] %s", invoker, text))
+LogWarningSkipConfig = function(invoker, ...)
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^3[WARNING] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogSuccess = function (text)
-    if not logInfo then return end
-    print("^2 " .. text)
+LogError = function(invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^1[FATAL ERROR] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogInfo = function (text)
-    if not logInfo then return end
-    print("^5 " .. text)
+LogWarning = function(invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^3[WARNING] [%s] %s", invoker, table.concat({...}, " ")))
 end
 
-LogMissingField = function (invoker, field, name)
+LogSuccess = function(invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^2[SUCCESS] [%s] %s", invoker, table.concat({...}, " ")))
+end
+
+LogInfo = function(invoker, ...)
+    if not Config.Debug then return end
+    if not invoker then invoker = "GridSystem" end
+    print(string.format("^5[INFO] [%s] %s", invoker, table.concat({...}, " ")))
+end
+
+LogMissingField = function(invoker, field, name)
     LogWarning(invoker, string.format("Filed in marker ^1%s ^3in script ^1%s ^3was not specified.\n^3A default value has been applied, please check your script", field, name))
 end
 
-LogBadFormat = function (invoker, field, name)
+LogBadFormat = function(invoker, field, name)
     LogWarning(invoker, string.format("Bad field format ^1%s ^3in marker ^1%s ^3.\n^3A default value has been applied, please check your script", field, name)) 
 end
 
-IsMarkerAlreadyRegistered = function (markerName)
+IsMarkerAlreadyRegistered = function(markerName)
     for k,v in pairs(RegisteredMarkers) do
         if type(v) == "table" then
             for i,j in pairs(v) do
@@ -53,7 +66,7 @@ RegisterTempMarkers = function()
     TempMarkerWithJob = {}
 end
 
-DrawText3D = function (x, y, z, text)
+DrawText3D = function(x, y, z, text)
     SetTextScale(0.325, 0.325)
     SetTextFont(4)
     SetTextProportional(1)
@@ -68,7 +81,7 @@ DrawText3D = function (x, y, z, text)
     ClearDrawOrigin()
 end
 
-CheckMarkerJob = function (marker)
+CheckMarkerJob = function(marker)
     if not marker.permission then return end
     marker.jobGrade = tonumber(marker.jobGrade)  
     if marker.jobGrade == nil then marker.jobGrade = 0 end 
@@ -85,18 +98,19 @@ CheckMarkerJob = function (marker)
     table.insert(MarkerWithJob[marker.permission], marker)
 end
 
-HasJob = function (jobName, jobGrade)
+HasJob = function(jobName, jobGrade)
+    if Config.Framework == "none" then return true end
     if not jobName then return true end
     while CurrentJob == nil do Wait(100) end
     return (CurrentJob.name == jobName and CurrentJob.grade >= jobGrade)
 end
 
-RemoveAllJobMarkers = function ()
+RemoveAllJobMarkers = function()
     for _,v in pairs(MarkerWithJob) do
         for i = 1, #v do
             local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(v[i].name)
             if isRegistered then
-                LogInfo("Removing Job Marker: " .. v[i].name)
+                LogInfo(GetInvokingResource(), "Removing Job Marker: " .. v[i].name)
                 if RegisteredMarkers[chunkId][index].blip then
                     RemoveBlip(RegisteredMarkers[chunkId][index].blip)
                 end
@@ -106,7 +120,7 @@ RemoveAllJobMarkers = function ()
     end
 end
 
-AddJobMarkers = function ()
+AddJobMarkers = function()
     if MarkerWithJob[CurrentJob.name] then
         for i = 1, #MarkerWithJob[CurrentJob.name] do
             if HasJob(MarkerWithJob[CurrentJob.name][i].permission, MarkerWithJob[CurrentJob.name][i].jobGrade) then
@@ -116,7 +130,7 @@ AddJobMarkers = function ()
     end
 end
 
-InsertMarkerIntoGrid = function (marker)
+InsertMarkerIntoGrid = function(marker)
     local markerChunk = GetCurrentChunk(marker.pos)
     if type(RegisteredMarkers[markerChunk]) ~= "table" then
         RegisteredMarkers[markerChunk] = {}
@@ -125,13 +139,13 @@ InsertMarkerIntoGrid = function (marker)
     return markerChunk
 end
 
-GetMarkersFromResource = function (resource)
+GetMarkersFromResource = function(resource)
     local temp = {}
     for k,v in pairs(RegisteredMarkers) do
         if type(v) == "table" then
             for i,j in pairs(v) do
                 if j.resource == resource then
-                    table.insert(temp, j)
+                    temp[#temp + 1] = j
                 end
             end
         end
