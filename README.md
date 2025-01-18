@@ -16,15 +16,15 @@ First you create a table with the following params
 | `scale` | Scale of the marker | vector3 | ❌ | `vector3(1.5, 1.5, 1.5)` |
 | `msg` | Message on the top left when inside the marker | string | ❌ | `NO TEXT PROVIDED` |
 | `drawDistance` | Distance when the marker start rendering | number | ❌ | 15.0 |
-| `control` | Key to press to perform action | string number | ❌ | 'E' |
+| `control` | Key to press to perform action | string or number | ❌ | 'E' |
 | `forceExit` | If set to true, once you press the control key inside the marker, you must exit and enter again to be able to press the control key again. | boolean | ❌ | false |
-| `show3D` | Draw a 3D text in the world instead of top left notification. If set to true overrides drawDistance (if it was specified before) and fields `color`, `type`, `scale` are ignored. | boolean | ❌ | false |
+| `show3D` | Draw a 3D text in the world instead of top left notification.<br/> If set to true overrides drawDistance (if it was specified before) and fields `color`, `type`, `scale` are ignored. | boolean | ❌ | false |
 | `type` | Marker type. Full list [Here](https://docs.fivem.net/docs/game-references/markers/) | number | ❌ | 20 |
 | `color` | Color of the marker in the format `{r = num , g = num, b = num }` | table | ❌ | `{ r = 255, g = 0, b = 0 }` |
 | `action` | Callback function called when control key is pressed | function | ❌ | Empty function |
 | `onEnter` | Callback function called when entering the marker | function | ❌ | |
 | `onExit` | Callback function called when exiting the marker | function | ❌ | |
-| `blip` | Blip object in case you want to create a blip, along side of the marker | object | ❌ | |
+| `blip` | Blip object in case you want to create a blip, along side of the marker.<br/> Defining the blip here, **does not** require the `blip.name` | object | ❌ | |
 
 Example for marker:
 
@@ -110,7 +110,8 @@ exports["gridsystem"]:UnregisterMarker(markerName)
 - ES Extended (ESX)
 - Standalone
 
-For creating a marker or a blip, only visible and accessible to a specific job in your framework, add these two (optional) fields in the marker/blip object when registering it
+For creating a marker or a blip, only visible and accessible to a specific job in your framework, add these two (optional) fields in the marker/blip object when registering it<br/>
+Same thing applies for blip object configuration.
 
 | Field Name | Description | Type | Required | Default Value |
 |--------------|-------------------------------------------------|--------|----------|------------------------------|
