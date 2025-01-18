@@ -38,7 +38,7 @@ LogInfo = function(invoker, ...)
 end
 
 LogMissingField = function(invoker, field, name)
-    LogWarning(invoker, string.format("Filed in marker ^1%s ^3in script ^1%s ^3was not specified.\n^3A default value has been applied, please check your script", field, name))
+    LogWarning(invoker, string.format("Filed ^1%s ^3in marker ^1%s ^3in script ^1%s ^3was not specified. ^3A default value has been applied, please check your script", field, name, invoker))
 end
 
 LogBadFormat = function(invoker, field, name)

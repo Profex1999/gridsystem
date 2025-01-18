@@ -13,7 +13,9 @@ function GridSystem.registerMarker(marker, blip)
         return
     end
 
-    if Config.Framework ~= "none" then CheckMarkerJob(marker) end
+    if Config.Framework ~= "none" then CheckMarkerJob(marker); end
+    if marker.blip and blip then marker.blip = blip; end
+    if marker.blip and not blip then blip = marker.blip; end
     if blip then
         blip.pos = marker.pos
         blip.name = marker.name

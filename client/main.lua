@@ -80,7 +80,7 @@ AddEventHandler("gridsystem:hasEnteredMarker", function(zone)
                     DisplayHelpTextThisFrame(zone.name, false)
                 end
 
-                if IsControlJustReleased(0, zone.control) then 
+                if IsControlJustReleased(0, zone.control) then
                     if zone.action then
                         local status, err = pcall(zone.action)
                         if not status then
