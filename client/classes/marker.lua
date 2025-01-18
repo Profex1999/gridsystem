@@ -65,6 +65,8 @@ function ParseMarker(m, invoker)
             m.color = Config.DefaultMarkerProperties.color
         end
         if not m.color.a then m.color.a = Config.DefaultMarkerProperties.color.a end
+
+        if not m.activationSize then m.activationSize = m.scale end
     end
     if not m.action then LogMissingField(invoker, "action", m.name); m.action = function () end; end
     m.resource = invoker

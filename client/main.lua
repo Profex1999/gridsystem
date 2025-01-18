@@ -76,20 +76,23 @@ AddEventHandler("gridsystem:hasEnteredMarker", function(zone)
     CreateThread(function()
         while CurrentZone do
             if zone and not zone.mustExit then
-                if not zone.show3D and not Config.UseCustomNotifications then
-                    DisplayHelpTextThisFrame(zone.name, false)
-                end
-
-                if IsControlJustReleased(0, zone.control) then
-                    if zone.action then
-                        local status, err = pcall(zone.action)
-                        if not status then
-                            LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
-                        end
+                if #(MyCoords.xy - zone.pos.xy) < #(zone.activationSize.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.activationSize.z then
+                    if not zone.show3D and not Config.UseCustomNotifications then
+                        DisplayHelpTextThisFrame(zone.name, false)
                     end
 
-                    if zone.forceExit then
-                        zone.mustExit = true
+                    -- check if the user is in the activation zone and if the control is pressed (e.g. zone.activationSize = vector3(1.0, 1.0, 1.0) and zone.control = 38)
+                    if zone.control and IsControlJustReleased(0, zone.control) then
+                        if zone.action then
+                            local status, err = pcall(zone.action)
+                            if not status then
+                                LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
+                            end
+                        end
+
+                        if zone.forceExit then
+                            zone.mustExit = true
+                        end
                     end
                 end
             end
