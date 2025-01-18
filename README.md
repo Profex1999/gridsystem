@@ -21,6 +21,7 @@ First you create a table with the following params
 | `show3D` | Draw a 3D text in the world instead of top left notification.<br/> If set to true overrides drawDistance (if it was specified before) and fields `color`, `type`, `scale` are ignored. | boolean | ❌ | false |
 | `type` | Marker type. Full list [Here](https://docs.fivem.net/docs/game-references/markers/) | number | ❌ | 20 |
 | `color` | Color of the marker in the format `{r = num , g = num, b = num }` | table | ❌ | `{ r = 255, g = 0, b = 0 }` |
+| `activationSize` | Size of the action range. | vector3 | ❌ | If not defined, the `scale` will be used |
 | `action` | Callback function called when control key is pressed | function | ❌ | Empty function |
 | `onEnter` | Callback function called when entering the marker | function | ❌ | |
 | `onExit` | Callback function called when exiting the marker | function | ❌ | |
@@ -120,4 +121,4 @@ Same thing applies for blip object configuration.
 
 # License
 
-### GNU AFFERO G.P.L.
+### AGPL-3.0 license
