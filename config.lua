@@ -1,8 +1,16 @@
 Config = {}
 
+-- Debug mode
 Config.Debug = true
 
+-- Frameworks: ESX, qb-core, standalone
 Config.Framework = "none"  -- ESX/qb-core/none
+-- If the script should try to automatically detect the framework
+Config.AutoCalculateFramework = true
+
+-- These are the default properties for markers
+--  If one of these properties is not provided during the registration process of markers,
+--  the default value defined here will be used.
 Config.DefaultMarkerProperties = {
     color = { r = 255, g = 0, b = 0, a = 50 },
     scale = vector3(1.0, 1.0, 1.0),

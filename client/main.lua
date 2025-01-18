@@ -17,6 +17,7 @@ LetSleep = true
 local abs = math.abs
 
 CreateThread(function()
+    if Config.AutoCalculateFramework then CheckForFramework() end
     if Config.Framework == "ESX" then 
         FrameworkObject = exports["es_extended"]:getSharedObject()
         CurrentJob = ESX.GetPlayerData().job

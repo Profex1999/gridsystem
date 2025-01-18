@@ -192,3 +192,14 @@ RegisterBlip = function(blip, invoker)
         end
     end
 end
+
+CheckForFramework = function()
+    if GetResourceState("ex_extended") == "started" then
+        Config.Framework = "ESX"
+    elseif GetResourceState("qb-core") == "started" then
+        Config.Framework = "qb-core"
+    else
+        Config.Framework = "none"
+    end
+    LogInfo(GetInvokingResource(), "Framework detected: " .. Config.Framework)
+end
