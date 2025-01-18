@@ -1,7 +1,7 @@
 Config = {}
 
 -- Debug mode
-Config.Debug = true
+Config.Debug = false
 
 -- Frameworks: ESX, qb-core, standalone
 Config.Framework = "none"  -- ESX/qb-core/none
