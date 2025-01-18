@@ -3,13 +3,13 @@ Config = {}
 Config.Framework = "none"  -- ESX/qb-core/none
 Config.DefaultMarkerProperties = {
     color = { r = 255, g = 0, b = 0, a = 50 },
-    scale = vector3(0.5, 0.5, 0.3),
+    scale = vector3(1.0, 1.0, 1.0),
     drawDistance = 15.0,
     control = 38, -- E (https://docs.fivem.net/docs/game-references/controls/)
     dir = vector3(0.0, 0.0, 0.0),
     rot = vector3(0.0, 0.0, 0.0),
     faceCamera = true,
-    bump = true,
+    bump = false,
     rotate = false,
 }
 
