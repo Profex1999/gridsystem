@@ -23,6 +23,8 @@ First you create a table with the following params
 | `onEnter` | Callback function called when entering the marker | function | NO | None |
 | `onExit` | Callback function called when exiting the marker | function | NO | None |
 
+> Note: You can still use the event to register markers; **keep in mind that it is legacy and will most likely be deprecated!**
+
 Example:
 
 ```lua
