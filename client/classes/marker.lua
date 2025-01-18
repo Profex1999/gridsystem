@@ -1,5 +1,7 @@
 function ParseMarker(m, invoker)
     if not m.name then LogError(invoker, "Marker creation failed: name not provided"); return nil; end
+    if not m.pos and not m.coords then LogError(invoker, "Marker creation failed: position not provided"); return nil; end
+    if m.coords then m.pos = vector3(m.coords.x, m.coords.y, m.coords.z); LogWarning(invoker, "coords field is deprecated, please use pos instead"); end
     if type(m.pos) ~= "vector3" then LogError(invoker, "Marker creation failed: position is not vector3"); return nil end
     if type(m.dir) ~= "vector3" then m.dir = Config.DefaultMarkerProperties.dir; end
     if type(m.rot) ~= "vector3" then m.rot = Config.DefaultMarkerProperties.rot; end
@@ -13,8 +15,7 @@ function ParseMarker(m, invoker)
     m.scaleZ = m.scale.z --save for later use
     if type(m.drawDistance) ~= "number" then m.drawDistance = Config.DefaultMarkerProperties.drawDistance; end
 
-    if not m.control or type(m.control) ~= "number" then m.control = Config.DefaultMarkerProperties.control;
-    end
+    if not m.control or type(m.control) ~= "number" then m.control = Config.DefaultMarkerProperties.control; end
 
     if type(m.forceExit) ~= "boolean" and type(m.forceExit) ~="nil" then
         LogBadFormat(invoker,"forceExit", m.name)
@@ -29,7 +30,7 @@ function ParseMarker(m, invoker)
         m.drawDistance = 5.0
     else
         if not m.type then m.type = 20 end
-        if m.type == 1 or m.type == 23 or m.type > 24 and m.type < 28 or m.type == 44 then
+        if m.type == 1 or m.type == 23 or m.type > 24 and (m.type < 28 or m.type == 44) and m.type ~= 27 then
             m.pos = m.pos - vector3(0, 0, 0.97)
             m.scaleZ = m.scaleZ + 1
         end
