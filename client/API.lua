@@ -43,9 +43,13 @@ function GridSystem.registerMarker(marker, blip)
     end
 end
 
+exports("RegisterMarker", GridSystem.registerMarker)
+
 function GridSystem.registerBlip(blip)
     RegisterBlip(blip, GetInvokingResource())
 end
+
+exports("RegisterBlip", GridSystem.registerBlip)
 
 function GridSystem.removeBlip(name)
     if RegisterBlip[name] then
@@ -56,6 +60,8 @@ function GridSystem.removeBlip(name)
     end
 end
 
+exports("RemoveBlip", GridSystem.removeBlip)
+
 function GridSystem.unregisterMarker(markerName)
     local isRegistered, chunkId, index = IsMarkerAlreadyRegistered(markerName)
     if isRegistered then
@@ -63,3 +69,5 @@ function GridSystem.unregisterMarker(markerName)
         RegisteredMarkers[chunkId][index] = nil
     end
 end
+
+exports("UnregisterMarker", GridSystem.unregisterMarker)
