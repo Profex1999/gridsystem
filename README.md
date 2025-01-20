@@ -14,18 +14,26 @@ First you create a table with the following params
 | `name` | Unique name of the marker | string | ✅ | |
 | `pos` | Position of the marker | vector3 | ✅ | |
 | `scale` | Scale of the marker | vector3 | ❌ | `vector3(1.5, 1.5, 1.5)` |
+| `rot` | The rotation for the marker | vector3 | ❌ | `vector3(0.0, 0.0, 0.0)` |
+| `dir` | The direction vector for the marker | vector3 | ❌ | `vector3(0.0, 0.0, 0.0)` |
+| `faceCamera` | If the marker should always face the camera | boolean | ❌ | **true** |
+| `bump` | Whether or not the marker should slowly animate up/down | boolean | ❌ | **false** |
+| `bump` | Whether or not the marker should slowly rotate its heading | boolean | ❌ | **false** |
 | `msg` | Message on the top left when inside the marker | string | ❌ | `NO TEXT PROVIDED` |
 | `drawDistance` | Distance when the marker start rendering | number | ❌ | 15.0 |
-| `control` | Key to press to perform action | string or number | ❌ | 'E' |
-| `forceExit` | If set to true, once you press the control key inside the marker, you must exit and enter again to be able to press the control key again. | boolean | ❌ | false |
-| `show3D` | Draw a 3D text in the world instead of top left notification.<br/> If set to true overrides drawDistance (if it was specified before) and fields `color`, `type`, `scale` are ignored. | boolean | ❌ | false |
-| `type` | Marker type. Full list [Here](https://docs.fivem.net/docs/game-references/markers/) | number | ❌ | 20 |
+| `control` | Key to press to perform action | string or number | ❌ | `E` |
+| `forceExit` | If set to true, once you press the control key inside the marker, you must exit and enter again to be able to press the control key again. | boolean | ❌ | **false** |
+| `show3D` | Draw a 3D text in the world instead of top left notification.<br/> If set to true overrides drawDistance (if it was specified before) and fields `color`, `type`, `scale` are ignored. | boolean | ❌ | **false** |
+| `type` | Marker type.<br/> Full list [Here](https://docs.fivem.net/docs/game-references/markers/) | number | ❌ | 20 |
 | `color` | Color of the marker in the format `{r = num , g = num, b = num }` | table | ❌ | `{ r = 255, g = 0, b = 0 }` |
-| `activationSize` | Size of the action range. | vector3 | ❌ | If not defined, the `scale` will be used |
+| `textureDict` | - | string | ❌ | |
+| `textureName` | - | string | ❌ | |
 | `action` | Callback function called when control key is pressed | function | ❌ | Empty function |
 | `onEnter` | Callback function called when entering the marker | function | ❌ | |
 | `onExit` | Callback function called when exiting the marker | function | ❌ | |
-| `blip` | Blip object in case you want to create a blip, along side of the marker.<br/> Defining the blip here, **does not** require the `blip.name` | object | ❌ | |
+| `blip` | Blip object in case you want to create a blip, along side of the marker.<br/> Defining the blip here, **does not** require the `blip.name` | table | ❌ | |
+
+The default behaviour of all these customizations can be changed in the `config.lua` file.
 
 Example for marker:
 
