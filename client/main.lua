@@ -14,7 +14,6 @@ TempMarkerWithJob = {}
 CurrentJob = nil
 
 LetSleep = true
-local abs = math.abs
 
 CreateThread(function()
     if Config.AutoCalculateFramework then CheckForFramework() end
@@ -23,7 +22,7 @@ CreateThread(function()
         CurrentJob = ESX.GetPlayerData().job
     elseif Config.Framework == "qb-core" then 
         FrameworkObject = exports['qb-core']:GetCoreObject()
-        local Player = QBCore.Functions.GetPlayerData()
+        local Player = FrameworkObject.Functions.GetPlayerData()
         CurrentJob = Player.job.name
     end
     RegisterTempMarkers()
@@ -31,7 +30,7 @@ end)
 
 RegisterNetEvent('QBCore:Client:UpdateObject', function()
 	FrameworkObject = exports['qb-core']:GetCoreObject()
-    local Player = QBCore.Functions.GetPlayerData()
+    local Player = FrameworkObject.Functions.GetPlayerData()
     CurrentJob = Player.job
     RefreshBlips()
     RemoveAllJobMarkers()
@@ -49,7 +48,7 @@ CreateThread(function()
     while true do
         MyPed = PlayerPedId()
         MyCoords = GetEntityCoords(MyPed)
-        Wait(200)
+        Wait(500)
     end
 end)
 
@@ -62,8 +61,8 @@ CreateThread(function()
         MarkersToCheck = {}
         for i = 1, #CurrentChunks do
             if RegisteredMarkers[CurrentChunks[i]] then
-                for zone = 1, #(RegisteredMarkers[CurrentChunks[i]]) do
-                    MarkersToCheck[#MarkersToCheck + 1] = RegisteredMarkers[CurrentChunks[i]][zone]
+                for _, zone in pairs(RegisteredMarkers[CurrentChunks[i]]) do
+                    table.insert(MarkersToCheck, zone)
                 end
             end
         end
@@ -76,23 +75,21 @@ AddEventHandler("gridsystem:hasEnteredMarker", function(zone)
     CreateThread(function()
         while CurrentZone do
             if zone and not zone.mustExit then
-                if #(MyCoords.xy - zone.pos.xy) < #(zone.activationSize.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.activationSize.z then
-                    if not zone.show3D and not Config.UseCustomNotifications then
-                        DisplayHelpTextThisFrame(zone.name, false)
+                if not zone.show3D and not Config.UseCustomNotifications then
+                    DisplayHelpTextThisFrame(zone.name, false)
+                end
+
+                -- check if the user is in the activation zone and if the control is pressed (e.g. zone.activationSize = vector3(1.0, 1.0, 1.0) and zone.control = 38)
+                if zone.control and IsControlJustReleased(0, zone.control) then
+                    if zone.action then
+                        local status, err = pcall(zone.action)
+                        if not status then
+                            LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
+                        end
                     end
 
-                    -- check if the user is in the activation zone and if the control is pressed (e.g. zone.activationSize = vector3(1.0, 1.0, 1.0) and zone.control = 38)
-                    if zone.control and IsControlJustReleased(0, zone.control) then
-                        if zone.action then
-                            local status, err = pcall(zone.action)
-                            if not status then
-                                LogErrorSkipConfig(GetInvokingResource(), string.format("Error executing action for marker %s. Error: %s", zone.name, err))
-                            end
-                        end
-
-                        if zone.forceExit then
-                            zone.mustExit = true
-                        end
+                    if zone.forceExit then
+                        zone.mustExit = true
                     end
                 end
             end
@@ -144,7 +141,7 @@ CreateThread(function()
                 elseif zone.type ~= -1 then
                     DrawMarker(zone.type, zone.pos, zone.dir, zone.rot, zone.scale, zone.color.r, zone.color.g, zone.color.b, zone.color.a, zone.bump, zone.faceCamera, 2, zone.rotate, zone.textureDict, zone.textureName, false)
                 end
-                if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
+                if #(MyCoords.xy - zone.pos.xy) < #(zone.scale.xy/2) and math.abs(MyCoords.z - zone.pos.z) < zone.scaleZ then
                     isInMarker, _currentZone = true, zone
                 end
             end
@@ -170,7 +167,7 @@ CreateThread(function()
     while true do
         local r, _e = pcall(_markerThread)
         if not r then
-            LogErrorSkipConfig(GetInvokingResource(), "Error in marker compute:", _e)
+            LogErrorSkipConfig(GetInvokingResource(), "Error in marker compute (_markerThread):", _e)
         end
         Wait(Sleep)
     end

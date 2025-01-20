@@ -54,7 +54,7 @@ function ParseMarker(m, invoker)
     else
         if not m.type then m.type = 20 end
         if m.type == 1 or m.type == 23 or m.type > 24 and (m.type < 28 or m.type == 44) and m.type ~= 27 then
-            m.pos = m.pos - vector3(0, 0, 0.97)
+            -- m.pos = m.pos - vector3(0, 0, 0.97)
             m.scaleZ = m.scaleZ + 1
         end
         AddTextEntry(m.name, m.msg)
@@ -65,8 +65,6 @@ function ParseMarker(m, invoker)
             m.color = Config.DefaultMarkerProperties.color
         end
         if not m.color.a then m.color.a = Config.DefaultMarkerProperties.color.a end
-
-        if not m.activationSize then m.activationSize = m.scale end
     end
     if not m.action then LogMissingField(invoker, "action", m.name); m.action = function () end; end
     m.resource = invoker
