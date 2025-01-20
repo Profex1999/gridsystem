@@ -1,6 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
-author 'Profex/Mycroft'
+author 'Profex / zThundy'
 description 'Marker drawing system (and more) based on a wolrd grid system'
 version '2.0.0'
 
