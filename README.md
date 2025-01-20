@@ -121,8 +121,7 @@ Same thing applies for blip object configuration.
 
 # Contributors
 
-| | |
-|--------------|--------------|
-| <a href="https://github.com/Profex1999">Profex1999</a> | <img src="https://avatars.githubusercontent.com/u/51895814?v=4" width="50" alt="Profex1999" style="border-radius:50%" /> |
-| <a href="https://github.com/zThundy">zThundy</a> | <img src="https://avatars.githubusercontent.com/u/25564154?v=4" width="50" alt="zThundy" style="border-radius:50%" /> |
-| <a href="https://github.com/Mycroft-Studios">Mycroft-Studios</a> | <img src="https://avatars.githubusercontent.com/u/22378232?v=4" width="50" alt="Mycroft-Studios" style="border-radius:50%" /> |
+| Owner | <a href="https://github.com/Profex1999">Profex1999</a> | <img src="https://avatars.githubusercontent.com/u/51895814?v=4" width="50" alt="Profex1999" style="border-radius:50%" /> |
+|--------------|--------------|--------------|
+| Repo maintaner | <a href="https://github.com/zThundy">zThundy</a> | <img src="https://avatars.githubusercontent.com/u/25564154?v=4" width="50" alt="zThundy" style="border-radius:50%" /> |
+| Contributor | <a href="https://github.com/Mycroft-Studios">Mycroft-Studios</a> | <img src="https://avatars.githubusercontent.com/u/22378232?v=4" width="50" alt="Mycroft-Studios" style="border-radius:50%" /> |
