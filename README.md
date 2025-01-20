@@ -121,17 +121,8 @@ Same thing applies for blip object configuration.
 
 # Contributors
 
-<div style="display:flex;justify-content:row;">
-  <div style="display:flex;flex-direction:column;border:1px solid white;width:fit-content;padding:5px;justify-content:center;align-items:center;min-width:80px;margin:5px;">
-    <img src="https://avatars.githubusercontent.com/u/51895814?v=4" width="50" alt="Profex1999" style="border-radius:50%" />
-    <a href="https://github.com/Profex1999">Profex1999</a>
-  </div>
-  <div style="display:flex;flex-direction:column;border:1px solid white;width:fit-content;padding:5px;justify-content:center;align-items:center;min-width:80px;margin:5px;">
-    <img src="https://avatars.githubusercontent.com/u/25564154?v=4" width="50" alt="zThundy" style="border-radius:50%" />
-    <a href="https://github.com/zThundy">zThundy</a>
-  </div>
-  <div style="display:flex;flex-direction:column;border:1px solid white;width:fit-content;padding:5px;justify-content:center;align-items:center;min-width:80px;margin:5px;">
-    <img src="https://avatars.githubusercontent.com/u/22378232?v=4" width="50" alt="Mycroft-Studios" style="border-radius:50%" />
-    <a href="https://github.com/Mycroft-Studios">Mycroft-Studios</a>
-  </div>
-</div>
+| | |
+|--------------|--------------|
+| <a href="https://github.com/Profex1999">Profex1999</a> | <img src="https://avatars.githubusercontent.com/u/51895814?v=4" width="50" alt="Profex1999" style="border-radius:50%" /> |
+| <a href="https://github.com/zThundy">zThundy</a> | <img src="https://avatars.githubusercontent.com/u/25564154?v=4" width="50" alt="zThundy" style="border-radius:50%" /> |
+| <a href="https://github.com/Mycroft-Studios">Mycroft-Studios</a> | <img src="https://avatars.githubusercontent.com/u/22378232?v=4" width="50" alt="Mycroft-Studios" style="border-radius:50%" /> |
