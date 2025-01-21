@@ -1,5 +1,3 @@
-FrameworkObject = {}
-
 MyPed = nil
 MyCoords = vector3(0,0,0)
 CurrentZone = nil
@@ -18,20 +16,24 @@ LetSleep = true
 CreateThread(function()
     if Config.AutoCalculateFramework then CheckForFramework() end
     if Config.Framework == "ESX" then 
-        FrameworkObject = exports["es_extended"]:getSharedObject()
+        local ESX = exports["es_extended"]:getSharedObject()
         CurrentJob = ESX.GetPlayerData().job
     elseif Config.Framework == "qb-core" then 
-        FrameworkObject = exports['qb-core']:GetCoreObject()
-        local Player = FrameworkObject.Functions.GetPlayerData()
-        CurrentJob = Player.job.name
+        local QBCore = exports['qb-core']:GetCoreObject()
+        CurrentJob = {
+            name = QBCore.Functions.GetPlayerData().job.name,
+            grade = QBCore.Functions.GetPlayerData().job.grade.level
+        }
     end
     RegisterTempMarkers()
 end)
 
 RegisterNetEvent('QBCore:Client:UpdateObject', function()
-	FrameworkObject = exports['qb-core']:GetCoreObject()
-    local Player = FrameworkObject.Functions.GetPlayerData()
-    CurrentJob = Player.job
+	local QBCore = exports['qb-core']:GetCoreObject()
+    CurrentJob = {
+        name = QBCore.Functions.GetPlayerData().job.name,
+        grade = QBCore.Functions.GetPlayerData().job.grade.level
+    }
     RefreshBlips()
     RemoveAllJobMarkers()
     AddJobMarkers()
