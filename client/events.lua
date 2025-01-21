@@ -29,16 +29,3 @@ AddEventHandler("gridsystem:unregisterMarker", function(markerName)
         RegisteredMarkers[chunkId][index] = nil
     end
 end)
-
-RegisterNetEvent("gridsystem:requestMarkersData", function()
-    if not Config.Debug then return end
-    local markers = {}
-    for k,v in pairs(RegisteredMarkers) do
-        if type(v) == "table" then
-            for i,j in pairs(v) do
-                markers[#markers + 1] = j
-            end
-        end
-    end
-    TriggerServerEvent("gridsystem:sendMarkersData", markers)
-end)
