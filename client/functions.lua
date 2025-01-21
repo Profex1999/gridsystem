@@ -1,6 +1,6 @@
 RegisterCommand("grid_log", function()
     Config.Debug = not Config.Debug
-    print("Grid System Log is now " .. (Config.Debug and "^1disabled" or "^2enabled"))
+    print("Grid System Log is now " .. (Config.Debug and "^2enabled" or "^1disabled"))
 end, true)
 
 LogErrorSkipConfig = function(invoker, ...)
