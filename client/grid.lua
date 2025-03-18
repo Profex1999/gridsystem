@@ -1,52 +1,53 @@
 local deltas = {
-	vector2(-1, -1),
-	vector2(-1, 0),
-	vector2(-1, 1),
-	vector2(0, -1),
-	vector2(1, -1),
-	vector2(1, 0),
-	vector2(1, 1),
-	vector2(0, 1),
+    vector2(-1, -1),
+    vector2(-1, 0),
+    vector2(-1, 1),
+    vector2(0, -1),
+	vector2(0, 0),
+    vector2(1, -1),
+    vector2(1, 0),
+    vector2(1, 1),
+    vector2(0, 1),
 }
-local bitShift = 2
+local bitShift = 32
 local zoneRadius = 64
 
 function GetGridChunk(x)
-	return math.floor((x + 8192) / zoneRadius)
+    return math.floor(x / zoneRadius)
 end
 
 function GetGridBase(x)
-	return (x * zoneRadius) - 8192
+    return (x * zoneRadius)
 end
 
 function GetChunkId(v)
-	return v.x << bitShift | v.y
+	return (v.x << bitShift) | (v.y & 0xFFFFFFFF)
 end
 
 function GetMaxChunkId()
-	return zoneRadius << bitShift
+    return zoneRadius << bitShift
 end
 
 function GetCurrentChunk(pos)
-	local chunk = vector2(GetGridChunk(pos.x), GetGridChunk(pos.y))
-	local chunkId = GetChunkId(chunk)
+    local chunk = vector2(GetGridChunk(pos.x), GetGridChunk(pos.y))
+    local chunkId = GetChunkId(chunk)
 
-	return chunkId
+    return chunkId
 end
 
 function GetNearbyChunks(pos)
     local nearbyChunksList = {}
-	local nearbyChunks = {}
-	
-    for i = 1, #deltas do -- Get nearby chunks
-        local chunkSize = pos.xy + (deltas[i] * 20) -- edge size
-        local chunk = vector2(GetGridChunk(chunkSize.x), GetGridChunk(chunkSize.y)) -- get nearby chunk
-        local chunkId = GetChunkId(chunk) -- Get id for chunk
+    local nearbyChunks = {}
+    
+    for i = 1, #deltas do 
+        local chunkSize = pos.xy + (deltas[i] * zoneRadius)
+        local chunk = vector2(GetGridChunk(chunkSize.x), GetGridChunk(chunkSize.y))
+        local chunkId = GetChunkId(chunk) 
 
-		if not nearbyChunksList[chunkId] then		
-			nearbyChunks[#nearbyChunks + 1] = chunkId
-			nearbyChunksList[chunkId] = true
-		end
+        if not nearbyChunksList[chunkId] then        
+            nearbyChunks[#nearbyChunks + 1] = chunkId
+            nearbyChunksList[chunkId] = true
+        end
     end
 
     return nearbyChunks
